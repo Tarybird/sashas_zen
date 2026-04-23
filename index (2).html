@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренажёр Саши</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a1a;--text2:#555;--text3:#999;
+  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
+  --teal:#1D9E75;--teal-light:#E1F5EE;--teal-dark:#085041;--teal-mid:#5DCAA5;
+  --blue-light:#E6F1FB;--blue:#185FA5;
+  --amber-light:#FAEEDA;--amber:#854F0B;
+  --red-light:#FCEBEB;--red:#A32D2D;
+  --green-light:#EAF3DE;--green:#3B6D11;
+  --r-md:8px;--r-lg:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1c;--bg2:#252525;--bg3:#2e2e2e;
+  --text:#e8e8e8;--text2:#aaa;--text3:#666;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --teal-light:#0a2e22;--teal-dark:#9FE1CB;
+  --blue-light:#0d1f33;--blue:#85B7EB;
+  --amber-light:#2e1f06;--amber:#FAC775;
+  --red-light:#2e0d0d;--red:#F09595;
+  --green-light:#111f08;--green:#C0DD97;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);min-height:100vh}
+.app{max-width:720px;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1{font-size:20px;font-weight:500;margin-bottom:4px}
+.subtitle{font-size:14px;color:var(--text3);margin-bottom:1.5rem}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border);padding-bottom:12px}
+.nav-btn{padding:7px 16px;border-radius:var(--r-md);border:none;background:transparent;cursor:pointer;font-size:14px;color:var(--text2)}
+.nav-btn:hover{background:var(--bg2)}
+.nav-btn.active{background:var(--teal-light);color:var(--teal-dark);font-weight:500}
+.section{display:none}.section.active{display:block}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:12px}
+.btn{padding:8px 18px;border-radius:var(--r-md);border:0.5px solid var(--border2);background:var(--bg);cursor:pointer;font-size:14px;color:var(--text)}
+.btn:hover{background:var(--bg2)}.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn.primary{background:var(--teal-light);border-color:var(--teal-mid);color:var(--teal-dark)}
+.btn.danger{background:var(--red-light);border-color:#F09595;color:var(--red)}
+.lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--r-md);margin-bottom:8px}
+.bw{background:var(--amber-light);color:var(--amber)}.bi{background:var(--blue-light);color:var(--blue)}
+.tabs-sm{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.tsm{padding:4px 12px;border-radius:var(--r-md);border:0.5px solid var(--border);background:transparent;cursor:pointer;font-size:13px;color:var(--text2)}
+.tsm.active{background:var(--bg2);color:var(--text);border-color:var(--border2)}
+.phrase-o{font-size:14px;color:var(--text2);font-style:italic;padding:9px 13px;background:var(--bg2);border-radius:var(--r-md);margin-bottom:8px;border-left:2px solid #B4B2A9}
+.phrase-n{font-size:14px;color:var(--text);padding:9px 13px;background:var(--bg);border-radius:var(--r-md);border-left:2px solid var(--teal)}
+.rc{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-md);padding:10px 14px}
+.rt{font-size:11px;font-weight:500;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.rv{font-size:14px;color:var(--text);line-height:1.6}
+.chat{background:var(--bg2);border-radius:var(--r-lg);padding:1rem;min-height:280px;max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.msg{max-width:82%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.6}
+.ma{background:var(--bg);border:0.5px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.ms{background:var(--teal-light);align-self:flex-end;border-bottom-right-radius:4px;color:var(--teal-dark)}
+.msys{font-size:12px;color:var(--text3);text-align:center;align-self:center}
+.mn{font-size:11px;font-weight:500;color:var(--text3);margin-bottom:3px}
+.irow{display:flex;gap:8px}
+.irow input{flex:1;padding:8px 12px;border-radius:var(--r-md);border:0.5px solid var(--border2);background:var(--bg);font-size:14px;color:var(--text);font-family:inherit}
+.fbbox{background:var(--bg2);border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:var(--text2);line-height:1.6;margin-top:8px}
+.hintbox{background:var(--amber-light);border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:var(--amber);line-height:1.6;margin-top:6px}
+.bwrap{display:flex;flex-direction:column;align-items:center;padding:1rem 0}
+.pbar{display:flex;gap:4px;margin-bottom:1rem}
+.ph{flex:1;height:5px;border-radius:3px;background:var(--border)}
+.ph.inhale{background:#378ADD}.ph.hold{background:#EF9F27}.ph.exhale{background:var(--teal)}
+.blbl{font-size:18px;font-weight:500;color:var(--text);margin-top:1rem;text-align:center;min-height:28px}
+.bsub{font-size:13px;color:var(--text3);margin-top:4px;text-align:center;min-height:20px}
+.btip{background:var(--blue-light);border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:var(--blue);margin-top:8px;line-height:1.6}
+.bdone{background:var(--green-light);border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:var(--green);margin-top:8px;text-align:center;display:none}
+.rdot{width:10px;height:10px;border-radius:50%;background:var(--border);display:inline-block}
+.rdot.on{background:#E24B4A;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tbox{background:var(--bg2);border-radius:var(--r-md);padding:1rem;min-height:80px;font-size:14px;line-height:1.7;color:var(--text);margin-bottom:8px;white-space:pre-wrap}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:1rem}
+.met{background:var(--bg2);border-radius:var(--r-md);padding:10px 12px}
+.mv{font-size:22px;font-weight:500;color:var(--text)}.ml{font-size:12px;color:var(--text3);margin-top:2px}
+.met.warn .mv{color:var(--amber)}.met.good .mv{color:var(--green)}
+.flag{display:inline-flex;font-size:12px;padding:3px 9px;border-radius:var(--r-md);margin:2px}
+.fr{background:var(--red-light);color:var(--red)}.fg{background:var(--green-light);color:var(--green)}
+.atext{font-size:14px;line-height:1.7;color:var(--text2);margin-top:1rem}
+.treader{font-size:17px;line-height:1.85;color:var(--text);font-family:Georgia,serif;min-height:80px}
+.treader .hl{color:var(--teal-dark);font-weight:500}
+.pbar2{height:3px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.pfill{height:100%;background:var(--teal);border-radius:2px;width:0%;transition:width .5s linear}
+.sdots{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.dot.done{background:var(--teal)}.dot.cur{background:var(--teal-mid)}
+.crow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:1rem}
+.tbig{font-size:24px;font-weight:500;color:var(--text);margin-left:auto}
+.note{font-size:13px;color:var(--text3);margin-top:8px;line-height:1.6}
+textarea{width:100%;min-height:60px;padding:8px 12px;border-radius:var(--r-md);border:0.5px solid var(--border2);background:var(--bg);font-size:14px;color:var(--text);font-family:inherit;resize:vertical;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Тренажёр Саши</h1>
+<div class="subtitle">Инструменты для подготовки к сложным разговорам</div>
+<nav class="nav">
+  <button class="nav-btn active" onclick="show('vocab',this)">Словарь фраз</button>
+  <button class="nav-btn" onclick="show('resp',this)">Ответы на посылы</button>
+  <button class="nav-btn" onclick="show('sim',this)">Симуляция</button>
+  <button class="nav-btn" onclick="show('train',this)">Аутотренинг</button>
+  <button class="nav-btn" onclick="show('breath',this)">Дыхание</button>
+  <button class="nav-btn" onclick="show('rec',this)">Запись и анализ</button>
+</nav>
+
+<div id="vocab" class="section active"><div id="vlist"></div></div>
+
+<div id="resp" class="section">
+  <div class="tabs-sm" id="rfilters">
+    <button class="tsm active" onclick="fResp('all',this)">Все</button>
+    <button class="tsm" onclick="fResp('victim',this)">Жертва</button>
+    <button class="tsm" onclick="fResp('attack',this)">Нападение</button>
+    <button class="tsm" onclick="fResp('distort',this)">Искажение</button>
+    <button class="tsm" onclick="fResp('ultimatum',this)">Ультиматум</button>
+    <button class="tsm" onclick="fResp('galya',this)">→ к Гале</button>
+  </div>
+  <div id="rlist"></div>
+</div>
+
+<div id="sim" class="section">
+  <div class="card">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem">
+      <span style="font-size:13px;color:var(--text2)">Сложность:</span>
+      <button class="tsm active" onclick="setDiff('mild',this)">Раздражённая</button>
+      <button class="tsm" onclick="setDiff('medium',this)">В полную силу</button>
+      <button class="tsm" onclick="setDiff('hard',this)">Плохой день</button>
+      <button class="btn" style="margin-left:auto;font-size:13px" onclick="resetSim()">Заново</button>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div id="hintbox" style="display:none" class="hintbox"></div>
+    <div class="irow" style="margin-top:8px">
+      <input id="sinput" placeholder="Твой ответ Алёне..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button class="btn primary" id="sbtn" onclick="sendMsg()">Отправить</button>
+      <button class="btn" id="hbtn" onclick="togHint()" style="display:none">Подсказка</button>
+    </div>
+    <div id="fbarea"></div>
+  </div>
+</div>
+
+<div id="train" class="section">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:1rem" id="tm-grid">
+    <button class="card" style="cursor:pointer;text-align:left" onclick="setTm('pre30',this)"><div style="font-size:14px;font-weight:500;margin-bottom:2px">Перед созвоном</div><div style="font-size:12px;color:var(--text3)">30 секунд</div></button>
+    <button class="card" style="cursor:pointer;text-align:left" onclick="setTm('pre60',this)"><div style="font-size:14px;font-weight:500;margin-bottom:2px">Перед созвоном</div><div style="font-size:12px;color:var(--text3)">1 минута</div></button>
+    <button class="card" style="cursor:pointer;text-align:left" onclick="setTm('emergency',this)"><div style="font-size:14px;font-weight:500;margin-bottom:2px">Экстренный</div><div style="font-size:12px;color:var(--text3)">во время созвона</div></button>
+    <button class="card" style="cursor:pointer;text-align:left" onclick="setTm('after',this)"><div style="font-size:14px;font-weight:500;margin-bottom:2px">После созвона</div><div style="font-size:12px;color:var(--text3)">восстановление</div></button>
+  </div>
+  <div id="tmarea"></div>
+</div>
+
+<div id="breath" class="section">
+  <div class="card">
+    <div class="tabs-sm">
+      <button class="tsm active" onclick="setP('box',this)">Квадратное · спокойствие</button>
+      <button class="tsm" onclick="setP('478',this)">4-7-8 · тревога</button>
+      <button class="tsm" onclick="setP('calm',this)">6-2-8 · после созвона</button>
+      <button class="tsm" onclick="setP('quick',this)">Экспресс · 30 сек</button>
+    </div>
+    <div class="pbar" id="pbar"><div class="ph" id="p0"></div><div class="ph" id="p1"></div><div class="ph" id="p2"></div><div class="ph" id="p3"></div></div>
+    <div class="bwrap">
+      <svg width="200" height="200" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="75" fill="none" stroke="var(--border)" stroke-width="1"/>
+        <circle cx="100" cy="100" id="bc" r="46" fill="var(--teal-light)" stroke="var(--teal-mid)" stroke-width="1.5"/>
+        <text x="100" y="105" text-anchor="middle" font-size="14" fill="var(--teal-dark)" font-family="inherit" font-weight="500" id="bn">—</text>
+      </svg>
+      <div class="blbl" id="bl">Выбери паттерн и нажми старт</div>
+      <div class="bsub" id="bs"></div>
+    </div>
+    <div class="crow">
+      <button class="btn primary" id="bstart" onclick="startB()">Начать</button>
+      <button class="btn" id="bstop" onclick="stopB()" disabled>Стоп</button>
+      <span class="tbig" id="btimer"></span>
+    </div>
+    <div class="btip" id="btip">Квадратное дыхание: 4 фазы по 4 секунды. Выравнивает нервную систему перед разговором.</div>
+    <div class="bdone" id="bdone">Готово. Ты молодец.</div>
+  </div>
+</div>
+
+<div id="rec" class="section">
+  <div class="card">
+    <div id="ios-notice" style="display:none;background:var(--amber-light);border-radius:var(--r-md);padding:10px 14px;margin-bottom:1rem;font-size:13px;color:var(--amber);line-height:1.6">
+      На iPhone запись с микрофона недоступна в Safari. Вставь текст своей речи вручную в поле ниже — анализ отработает так же.
+    </div>
+    <div id="rec-controls">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+        <span class="rdot" id="rdot"></span>
+        <span style="font-size:14px;color:var(--text2)" id="rstatus">Готова к записи</span>
+        <span class="tbig" id="rtimer" style="font-size:18px"></span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="btn primary" id="rstart" onclick="startR()">Начать запись</button>
+        <button class="btn danger" id="rstop" onclick="stopR()" disabled>Остановить</button>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Расшифровка идёт в реальном времени.</div>
+      <div class="tbox" id="transcript" style="margin-bottom:1rem">Расшифровка появится здесь...</div>
+    </div>
+    <div style="font-size:13px;color:var(--text2);font-weight:500;margin-bottom:6px" id="manual-label">Вставь текст своей речи:</div>
+    <textarea id="manual" placeholder="Напиши или вставь фрагмент своей речи из созвона..."></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button class="btn primary" id="ranalyze" onclick="analyzeR()">Проанализировать</button>
+      <button class="btn" onclick="clearR()">Очистить</button>
+    </div>
+  </div>
+  <div id="aout" style="display:none" class="card">
+    <div style="font-size:15px;font-weight:500;margin-bottom:1rem">Анализ речи</div>
+    <div class="mg" id="metrics"></div>
+    <div id="flags"></div>
+    <div class="atext" id="aiout"></div>
+  </div>
+</div>
+</div>
+
+<script>
+const VOCAB=[
+  {want:'«Ты опять всё перекручиваешь!»',say:'«Я не использовала эту формулировку. Могу процитировать что именно написала.»',tone:'нейтрально'},
+  {want:'«Это не моя проблема, иди к Гале!»',say:'«Этот вопрос выходит за рамки того, что я могу решить на своём уровне. Предлагаю подключить Галю.»',tone:'нейтрально'},
+  {want:'«Ты специально делаешь из себя жертву!»',say:'«Я слышу что ты ощущаешь несправедливость. Давай сначала закроем рабочий вопрос — потом, если нужно, поговорим об остальном отдельно.»',tone:'нейтрально'},
+  {want:'«Я уже сто раз объяснила!»',say:'«Я слышу тебя. Моя позиция остаётся прежней.»',tone:'нейтрально'},
+  {want:'«Ты вообще не имеешь права меня оценивать!»',say:'«У тебя есть право на своё мнение. Использовать его как аргумент против рабочего решения — некорректно.»',tone:'нейтрально'},
+  {want:'«Ты манипулируешь, и я это вижу!»',say:'«Это риторический вопрос или ждёшь ответа?»',tone:'юмор'},
+  {want:'«Я не виновата что у тебя нижестоящая должность!»',say:'«Я не принимаю решения о должностях — это не в моих полномочиях. Вопрос карьерного роста — к Гале.»',tone:'нейтрально'},
+  {want:'«Ты буквально придумала мои слова!»',say:'«Интересная версия — но у меня есть оригинал, если понадобится.»',tone:'юмор'},
+  {want:'«Ты постоянно уводишь разговор в сторону!»',say:'«Мы как-то очень далеко ушли от скриншотов.»',tone:'юмор'},
+  {want:'«Я не могу больше это терпеть!»',say:'«Я готова продолжить разговор когда мы оба сможем общаться спокойно.»',tone:'нейтрально'},
+];
+const RDATA=[
+  {type:'victim',tl:'Жертва',tr:'«Со мной несправедливо»',items:[{t:'нейтрально',tx:'Я слышу что у тебя есть ощущение несправедливости. Это серьёзная тема — она заслуживает отдельного разговора, не в рамках текущей задачи.'},{t:'к Гале',tx:'Если есть вопросы по распределению задач — предлагаю вынести это на встречу с Галей, чтобы решить системно.'}]},
+  {type:'victim',tl:'Жертва',tr:'«На мне требований больше, чем на Кристине»',items:[{t:'нейтрально',tx:'Я готова разобрать распределение задач конкретно — что именно и за какой период кажется тебе несбалансированным.'},{t:'нейтрально',tx:'Давай зафиксируем факты и посмотрим на них вместе с Галей.'}]},
+  {type:'attack',tl:'Нападение',tr:'«Ты плохой руководитель»',items:[{t:'нейтрально',tx:'Ты имеешь право на такую оценку. Я с ней не согласна — и моя работа говорит сама за себя.'},{t:'нейтрально',tx:'Оценка моей работы как лида — это разговор с Галей, не предмет нашего с тобой спора.'}]},
+  {type:'attack',tl:'Нападение',tr:'«Ты держишь меня на низкой должности»',items:[{t:'нейтрально',tx:'Я не принимаю решения о должностях — это не в моих полномочиях. Вопросы карьерного роста — к Гале.'},{t:'нейтрально',tx:'У меня нет ни мотива, ни инструментов влиять на твою должность.'}]},
+  {type:'distort',tl:'Искажение',tr:'Пересказывает мои слова неточно',items:[{t:'нейтрально',tx:'Я тебя остановлю здесь — это не то что я говорила. Дословно это звучало так: ...'},{t:'юмор',tx:'Интересная версия — но у меня есть оригинал, если понадобится.'},{t:'нейтрально',tx:'Я не припомню такого разговора. Возможно, мы запомнили это по-разному.'}]},
+  {type:'distort',tl:'Искажение',tr:'«Ты меня не слышишь»',items:[{t:'нейтрально',tx:'Это твоя интерпретация, и ты имеешь право её иметь. Она не совпадает с тем что я говорила.'},{t:'юмор',tx:'Над эмпатией работаю, над телепатией — пока нет.'}]},
+  {type:'ultimatum',tl:'Ультиматум',tr:'«Мы можем договориться что я уволюсь»',items:[{t:'нейтрально',tx:'Решение об увольнении — твоё личное решение. Я не буду ни подталкивать, ни отговаривать — это не в моей компетенции.'},{t:'юмор',tx:'Давай такие решения всё-таки оставим HR.'}]},
+  {type:'ultimatum',tl:'Ультиматум',tr:'«Это твоё испытание»',items:[{t:'нейтрально',tx:'Эскалация к Гале — стандартный рабочий инструмент, а не признак того что кто-то не справляется. Я его использую осознанно.'},{t:'юмор',tx:'Спасибо за заботу о моём профессиональном росте.'}]},
+  {type:'galya',tl:'→ к Гале',tr:'Разговор зашёл в тупик',items:[{t:'нейтрально',tx:'Я исчерпала то что могу сделать в рамках нашего с тобой диалога. Предлагаю подключить Галю.'},{t:'нейтрально',tx:'Я вижу что мы приходим к разным выводам из одной ситуации. Думаю нам стоит подключить Галю — не чтобы разбирать кто прав, а чтобы найти решение.'}]},
+  {type:'galya',tl:'→ к Гале',tr:'«Мы уже обсуждали с Галей — стало хуже»',items:[{t:'нейтрально',tx:'Я помню тот разговор. И именно потому что после него не все вопросы были сняты — считаю что нужен следующий.'},{t:'нейтрально',tx:'Я не буду оценивать здесь помог он или нет — это разговор для Гали. Я обращусь к Гале.'}]},
+];
+const TM={
+  pre30:{label:'Перед созвоном · 30 сек',dur:30,variants:[
+    {name:'A — сила',steps:['Я знаю зачем я здесь.','Моя задача сегодня — не победить в споре. Моя задача — остаться собой.','Я вижу манипуляции. Я не буду на них реагировать.','Моё спокойствие сильнее любого давления.','Я готова.']},
+    {name:'B — границы',steps:['Я лид. Мои решения не требуют её одобрения.','Я отвечаю только за рабочую часть разговора.','Эмоции Алёны — это её эмоции. Они не мои.','Я говорю коротко, нейтрально, по делу.','Я готова.']},
+    {name:'C — якорь',steps:['Три слова, которые со мной сегодня: спокойно, коротко, по делу.','Я не объясняю. Я не оправдываюсь. Я не вхожу в её поле.','Если станет тяжело — я сделаю паузу. Это моё право.','Я уже сделала всё что могла. Дальше — Галя.','Вперёд.']},
+  ]},
+  pre60:{label:'Перед созвоном · 1 мин',dur:60,variants:[
+    {name:'A — с дыханием',steps:['↓ Вдох на 4 счёта — задержи — выдох на 6. Ещё раз.','Я компетентный специалист с десятью годами опыта. Это факт, который не зависит от чужого мнения.','Сейчас передо мной рабочая задача. Не поединок, не суд — просто работа.','Я замечу когда разговор пойдёт не туда. Я спокойно верну его в рабочее русло или скажу: этот вопрос — к Гале.','↓ Ещё один вдох. Медленный выдох.','Я не должна нравиться Алёне. Я должна делать свою работу хорошо. Это я умею.','Готово. Я готова.']},
+    {name:'B — расстановка',steps:['Сейчас я позволю себе одну минуту полной ясности.','↓ Вдох — выдох. Почувствуй что сидишь на стуле. Ноги на полу.','Я знаю чего хочу от этого разговора. Я хочу закрыть рабочий вопрос и сохранить себя.','Я знаю чего не хочу. Не хочу оправдываться, объяснять, доказывать.','Всё что выходит за рамки работы — я перенаправляю к Гале. Спокойно и без извинений.','↓ Вдох. Задержи. Медленный выдох.','Я — взрослый профессионал. Эта встреча мне по силам.']},
+    {name:'C — три опоры',steps:['↓ Три медленных вдоха. Не торопись.','Первая опора: я знаю факты. У меня есть переписка. Я не придумываю.','Вторая опора: я знаю свои границы. Я говорю о работе. Остальное — не мой уровень.','Третья опора: у меня есть Галя. Я не одна с этим.','Алёна будет пытаться меня вывести из равновесия. Это её паттерн, не моя реальность.','↓ Последний вдох. Отпусти напряжение на выдохе.','Начинаем.']},
+  ]},
+  emergency:{label:'Экстренный · сейчас',dur:15,variants:[
+    {name:'Якорь 1',steps:['Стоп. Я вижу что происходит.','Я не обязана отвечать прямо сейчас. Пауза — это нормально.','Моя следующая фраза будет короткой, нейтральной и по делу.']},
+    {name:'Якорь 2',steps:['Это её эмоции. Не мои.','Мне не нужно это исправлять или объяснять.','Я слушаю — и возвращаю в рабочее русло.']},
+    {name:'Якорь 3',steps:['Галя рядом. Я не одна.','Я наблюдаю — я не защищаюсь.','Спокойствие — это моя сила, не слабость.']},
+  ]},
+  after:{label:'После созвона · восстановление',dur:50,variants:[
+    {name:'A — выход',steps:['Созвон закончен. Я выхожу из этого поля.','↓ Три глубоких вдоха. Выдыхай медленно.','Я сделала что могла. Этого достаточно.','Где я сохранила себя — это победа. Даже если снаружи так не выглядело.','Её реакции — не мера моей ценности. Никогда.','↓ Ещё один вдох. Отпусти созвон.','Я возвращаюсь в себя.']},
+    {name:'B — добрый',steps:['Я только что прошла через трудное. Это важно признать.','↓ Положи руку на грудь. Вдох. Выдох.','Я старалась остаться собой — и это не мало.','Мне не нужно было всё сделать идеально. Я не обязана.','Я человек, которому бывает больно. И я человек, который умеет подниматься.','↓ Последний вдох. Выдох.','Можно двигаться дальше.']},
+  ]},
+};
+const BP={
+  box:{tip:'Квадратное дыхание: 4 фазы по 4 секунды. Выравнивает нервную систему перед разговором.',cyc:5,ph:[{l:'Вдох',t:4,c:'inhale'},{l:'Задержи',t:4,c:'hold'},{l:'Выдох',t:4,c:'exhale'},{l:'Задержи',t:4,c:'hold'}]},
+  '478':{tip:'4-7-8: снимает острую тревогу за 3-4 цикла. Используй когда сильно волнуешься.',cyc:4,ph:[{l:'Вдох',t:4,c:'inhale'},{l:'Задержи',t:7,c:'hold'},{l:'Выдох',t:8,c:'exhale'},{l:'',t:0,c:''}]},
+  calm:{tip:'6-2-8: длинный выдох активирует парасимпатику. Помогает выйти из состояния после тяжёлого созвона.',cyc:4,ph:[{l:'Вдох',t:6,c:'inhale'},{l:'Задержи',t:2,c:'hold'},{l:'Выдох',t:8,c:'exhale'},{l:'',t:0,c:''}]},
+  quick:{tip:'Экспресс: можно делать прямо за столом незаметно. 5 циклов — около 40 секунд.',cyc:5,ph:[{l:'Вдох',t:3,c:'inhale'},{l:'Выдох',t:5,c:'exhale'},{l:'',t:0,c:''},{l:'',t:0,c:''}]},
+};
+
+/* VOCAB */
+document.getElementById('vlist').innerHTML=VOCAB.map(v=>`<div class="card"><span class="badge ${v.tone==='юмор'?'bi':'bw'}">${v.tone}</span><div class="lbl">Хочется сказать</div><div class="phrase-o">${v.want}</div><div class="lbl">Говорим вместо этого</div><div class="phrase-n">${v.say}</div></div>`).join('');
+
+/* RESP */
+function fResp(type,btn){
+  document.querySelectorAll('#rfilters .tsm').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  const d=type==='all'?RDATA:RDATA.filter(x=>x.type===type);
+  document.getElementById('rlist').innerHTML=d.map(x=>`<div class="card"><span class="badge bw">${x.tl}</span><div class="lbl">Когда Алёна</div><div class="phrase-o">${x.tr}</div><div style="display:grid;gap:8px">${x.items.map(it=>`<div class="rc"><div class="rt">${it.t}</div><div class="rv">${it.tx}</div></div>`).join('')}</div></div>`).join('');
+}
+fResp('all',document.querySelector('#rfilters .tsm'));
+
+/* SIM */
+let sDiff='mild',sHist=[],sHint='',sHintOn=false;
+const SOPEN={mild:'Слушай, ну вот опять — последний раз Кристина не прикладывала эвиденсы и всё было нормально. А теперь вдруг нужно? Кажется немного несправедливым...',medium:'Ну вот, и снова та же история. Кристина ничего не прикладывает — всем ок. Я прикладываю — требования растут. А ещё обидно что тебя не волнует что мне от этого больно. Очень эмпатично, да.',hard:'Знаешь, я уже устала. Прошёл год, но ситуация не меняется. С меня требуют больше, мои усилия никто не замечает. Если тебя так всё устраивает, мы можем договориться что я просто уволюсь.'};
+function setDiff(d,btn){sDiff=d;document.querySelectorAll('#sim .tsm').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function addM(role,txt){const c=document.getElementById('chat');const d=document.createElement('div');if(role==='sys'){d.className='msg msys';d.textContent=txt;}else{d.className=role==='a'?'msg ma':'msg ms';const n=document.createElement('div');n.className='mn';n.textContent=role==='a'?'Алёна':'Ты';d.appendChild(n);const t=document.createElement('div');t.textContent=txt;d.appendChild(t);}c.appendChild(d);c.scrollTop=c.scrollHeight;return d;}
+async function apiCall(sys,msgs){const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,...(sys?{system:sys}:{}),messages:msgs})});const d=await r.json();return d.content.map(c=>c.text||'').join('');}
+async function sendMsg(){const inp=document.getElementById('sinput');const txt=inp.value.trim();if(!txt)return;inp.value='';document.getElementById('sbtn').disabled=true;document.getElementById('hintbox').style.display='none';sHintOn=false;addM('s',txt);sHist.push({role:'user',content:txt});const ty=addM('a','');ty.querySelector('div:last-child').textContent='...';const ctx=sHist.slice(-4).map(m=>(m.role==='user'?'Саша':'Алёна')+': '+m.content).join('\n');const sys=`Ты Алёна, младший тестировщик. Уровень: ${sDiff}. Паттерны: смещает в эмоции, жертва, искажает слова, ультиматумы. 2-3 предложения. Только реплику.`;const[ar,fb]=await Promise.all([apiCall(sys,sHist),apiCall(null,[{role:'user',content:`Коуч. Саша ответила: "${txt}". Контекст: ${ctx}. 2 предложения: что сработало и что улучшить. По-русски.`}])]);ty.querySelector('div:last-child').textContent=ar;sHist.push({role:'assistant',content:ar});document.getElementById('fbarea').innerHTML=fb?`<div class="fbbox">${fb}</div>`:'';sHint=await apiCall(null,[{role:'user',content:`Алёна: "${ar}". Одна подсказка Саше — конкретная фраза. 1 предложение. По-русски.`}]);document.getElementById('hbtn').style.display='inline-block';document.getElementById('sbtn').disabled=false;document.getElementById('chat').scrollTop=9999;}
+function togHint(){sHintOn=!sHintOn;const hb=document.getElementById('hintbox');hb.style.display=sHintOn?'block':'none';if(sHintOn)hb.textContent='Подсказка: '+sHint;}
+function resetSim(){sHist=[];sHint='';sHintOn=false;document.getElementById('chat').innerHTML='';document.getElementById('fbarea').innerHTML='';document.getElementById('hintbox').style.display='none';document.getElementById('hbtn').style.display='none';const op=SOPEN[sDiff];sHist.push({role:'user',content:'[Начало]'});sHist.push({role:'assistant',content:op});addM('sys','Диалог начат');addM('a',op);apiCall(null,[{role:'user',content:`Алёна: "${op}". Одна подсказка Саше. 1 предложение. По-русски.`}]).then(h=>{sHint=h;document.getElementById('hbtn').style.display='inline-block';});}
+resetSim();
+
+/* TRAINING */
+let tmMode='pre30',tmV=0,tmStep=0,tmT=null,tmOn=false,tmEl=0;
+function setTm(m,btn){tmMode=m;tmV=0;document.querySelectorAll('#tm-grid .card').forEach(b=>b.style.borderColor='var(--border)');btn.style.borderColor='var(--teal)';renderTm();}
+function fmtS(t){if(t.startsWith('↓'))return`<span class="hl">${t}</span>`;return t.replace(/\b(я|мне|моя|моё|мои|меня)\b/gi,m=>`<span class="hl">${m}</span>`);}
+function renderTm(){const cfg=TM[tmMode];const steps=cfg.variants[tmV].steps;const vt=cfg.variants.map((v,i)=>`<button class="tsm ${i===tmV?'active':''}" onclick="swTmV(${i},this)">${v.name}</button>`).join('');const dots=steps.map((_,i)=>`<div class="dot ${i===0?'cur':''}" id="td${i}"></div>`).join('');document.getElementById('tmarea').innerHTML=`<div class="card"><div style="font-size:13px;color:var(--text3);margin-bottom:10px">${cfg.label}</div><div class="tabs-sm">${vt}</div><div class="pbar2"><div class="pfill" id="tf"></div></div><div class="sdots" id="tdots">${dots}</div><div class="treader" id="tr">${fmtS(steps[0])}</div><div class="crow"><button class="btn primary" id="tstart" onclick="startTm()">Начать</button><button class="btn" id="tnext" onclick="nextTm()" disabled>Следующий</button><button class="btn" onclick="resetTm()">Сначала</button><span class="tbig" id="ttimer">${cfg.dur}с</span></div><div class="note">Читай вслух, медленно. Каждую фразу — как утверждение.</div></div>`;tmStep=0;tmEl=0;tmOn=false;}
+function swTmV(i,btn){tmV=i;document.querySelectorAll('#tmarea .tsm').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const steps=TM[tmMode].variants[i].steps;tmStep=0;tmEl=0;document.getElementById('tr').innerHTML=fmtS(steps[0]);document.getElementById('tdots').innerHTML=steps.map((_,j)=>`<div class="dot ${j===0?'cur':''}" id="td${j}"></div>`).join('');document.getElementById('tf').style.width='0%';document.getElementById('ttimer').textContent=TM[tmMode].dur+'с';if(tmT){clearInterval(tmT);tmOn=false;}document.getElementById('tstart').disabled=false;document.getElementById('tnext').disabled=true;}
+function startTm(){if(tmOn)return;tmOn=true;tmStep=0;tmEl=0;const cfg=TM[tmMode];const steps=cfg.variants[tmV].steps;const tot=cfg.dur;const spt=tot/steps.length;document.getElementById('tstart').disabled=true;document.getElementById('tnext').disabled=false;updTmD(steps.length,0);tmT=setInterval(()=>{tmEl++;document.getElementById('tf').style.width=Math.min(100,Math.round(tmEl/tot*100))+'%';document.getElementById('ttimer').textContent=Math.max(0,tot-tmEl)+'с';const exp=Math.min(steps.length-1,Math.floor(tmEl/spt));if(exp!==tmStep){tmStep=exp;document.getElementById('tr').innerHTML=fmtS(steps[tmStep]);updTmD(steps.length,tmStep);}if(tmEl>=tot){clearInterval(tmT);tmOn=false;document.getElementById('ttimer').textContent='Готово';document.getElementById('tnext').disabled=true;}},1000);}
+function nextTm(){const steps=TM[tmMode].variants[tmV].steps;if(tmStep<steps.length-1){tmStep++;document.getElementById('tr').innerHTML=fmtS(steps[tmStep]);updTmD(steps.length,tmStep);document.getElementById('tf').style.width=Math.round(tmStep/(steps.length-1)*100)+'%';if(tmStep===steps.length-1)document.getElementById('tnext').disabled=true;}}
+function resetTm(){if(tmT)clearInterval(tmT);tmOn=false;tmStep=0;tmEl=0;const steps=TM[tmMode].variants[tmV].steps;document.getElementById('tr').innerHTML=fmtS(steps[0]);document.getElementById('tf').style.width='0%';document.getElementById('ttimer').textContent=TM[tmMode].dur+'с';document.getElementById('tstart').disabled=false;document.getElementById('tnext').disabled=true;updTmD(steps.length,0);}
+function updTmD(tot,cur){for(let i=0;i<tot;i++){const d=document.getElementById('td'+i);if(d)d.className='dot'+(i<cur?' done':i===cur?' cur':'');}}
+setTm('pre30',document.querySelector('#tm-grid .card'));
+
+/* BREATH */
+let bPat='box',bT=null,bOn=false,bPh=0,bCy=0,bEl=0,bTot=0;
+function setP(p,btn){bPat=p;document.querySelectorAll('#breath .tsm').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('btip').textContent=BP[p].tip;stopB();updPB(-1);}
+function updPB(a){const p=BP[bPat];for(let i=0;i<4;i++){const el=document.getElementById('p'+i);if(p.ph[i]&&p.ph[i].t>0){el.style.flex=p.ph[i].t;el.className='ph'+(i===a?' '+p.ph[i].c:'');}else{el.style.flex='0';el.className='ph';}}}
+function startB(){if(bOn)return;bOn=true;bPh=0;bCy=0;bEl=0;const p=BP[bPat];bTot=p.ph.reduce((s,x)=>s+x.t,0)*p.cyc;document.getElementById('bstart').disabled=true;document.getElementById('bstop').disabled=false;document.getElementById('bdone').style.display='none';runBPh();}
+function runBPh(){if(!bOn)return;const p=BP[bPat];while(bPh<4&&p.ph[bPh].t===0)bPh++;if(bPh>=4||bCy>=p.cyc){doneB();return;}const ph=p.ph[bPh];updPB(bPh);document.getElementById('bl').textContent=ph.l;const sub={inhale:'носом, медленно',hold:'не дыши',exhale:'ртом, медленно'};document.getElementById('bs').textContent=sub[ph.c]||'';const minR=46,maxR=72;const sR=ph.c==='inhale'?minR:ph.c==='exhale'?maxR:null;const eR=ph.c==='inhale'?maxR:ph.c==='exhale'?minR:null;let tk=0;document.getElementById('bn').textContent=ph.t;bT=setInterval(()=>{tk++;bEl++;document.getElementById('bn').textContent=Math.max(0,ph.t-tk);document.getElementById('btimer').textContent=Math.max(0,bTot-bEl)+'с';if(sR!==null&&eR!==null){document.getElementById('bc').setAttribute('r',Math.round(sR+(eR-sR)*(tk/ph.t)));}if(tk>=ph.t){clearInterval(bT);bPh++;if(bPh>=4){bCy++;bPh=0;}if(bCy<p.cyc)runBPh();else doneB();}},1000);}
+function doneB(){bOn=false;clearInterval(bT);document.getElementById('bl').textContent='';document.getElementById('bs').textContent='';document.getElementById('bn').textContent='';document.getElementById('btimer').textContent='';document.getElementById('bc').setAttribute('r',46);document.getElementById('bstart').disabled=false;document.getElementById('bstop').disabled=true;document.getElementById('bdone').style.display='block';updPB(-1);}
+function stopB(){clearInterval(bT);bOn=false;document.getElementById('bl').textContent='Выбери паттерн и нажми старт';document.getElementById('bs').textContent='';document.getElementById('bn').textContent='—';document.getElementById('btimer').textContent='';document.getElementById('bc').setAttribute('r',46);document.getElementById('bstart').disabled=false;document.getElementById('bstop').disabled=true;document.getElementById('bdone').style.display='none';updPB(-1);}
+updPB(-1);
+
+/* REC */
+let recog=null,recOn=false,recT=null,recS=0,fullTxt='';
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+const hasSR=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
+(function initRec(){
+  if(isIOS||!hasSR){
+    document.getElementById('ios-notice').style.display='block';
+    document.getElementById('rec-controls').style.display='none';
+    document.getElementById('manual-label').textContent='Вставь текст своей речи:';
+  }
+})();
+const SW=['извини','извините','прости','наверное','скорее всего','может быть','возможно','я не уверена','просто','ну','как бы','видимо'];
+const SH=['я слышу','моя позиция','по делу','к гале','рабочий вопрос','в моих полномочиях','я готова','это твоя интерпретация','не вкладывала','могу процитировать'];
+function startR(){if(!hasSR||isIOS)return;recog=new(window.SpeechRecognition||window.webkitSpeechRecognition)();recog.lang='ru-RU';recog.continuous=true;recog.interimResults=true;fullTxt='';document.getElementById('transcript').textContent='';document.getElementById('aout').style.display='none';recog.onresult=e=>{let im='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)fullTxt+=e.results[i][0].transcript+' ';else im+=e.results[i][0].transcript;}document.getElementById('transcript').textContent=fullTxt+im;};recog.onerror=()=>{};recog.start();recOn=true;recS=0;document.getElementById('rdot').classList.add('on');document.getElementById('rstatus').textContent='Запись идёт...';document.getElementById('rstart').disabled=true;document.getElementById('rstop').disabled=false;recT=setInterval(()=>{recS++;document.getElementById('rtimer').textContent=Math.floor(recS/60)+':'+(recS%60<10?'0':'')+(recS%60);},1000);}
+function stopR(){if(recog)recog.stop();recOn=false;clearInterval(recT);document.getElementById('rdot').classList.remove('on');document.getElementById('rstatus').textContent='Запись остановлена';document.getElementById('rstart').disabled=false;document.getElementById('rstop').disabled=true;}
+function clearR(){if(recog)recog.stop();recOn=false;clearInterval(recT);fullTxt='';if(!isIOS&&hasSR){document.getElementById('transcript').textContent='Расшифровка появится здесь...';document.getElementById('rdot').classList.remove('on');document.getElementById('rstatus').textContent='Готова к записи';document.getElementById('rtimer').textContent='';document.getElementById('rstart').disabled=false;document.getElementById('rstop').disabled=true;}document.getElementById('manual').value='';document.getElementById('aout').style.display='none';}
+async function analyzeR(){const m=document.getElementById('manual').value.trim();const txt=m||fullTxt.trim();if(!txt){alert('Нет текста');return;}document.getElementById('ranalyze').disabled=true;document.getElementById('aout').style.display='block';const wc=txt.toLowerCase().split(/\s+/).length;const sc=(txt.match(/[.!?]+/g)||[]).length||1;const avg=Math.round(wc/sc);let sf=[],shf=[];SW.forEach(w=>{if(txt.toLowerCase().includes(w))sf.push(w);});SH.forEach(w=>{if(txt.toLowerCase().includes(w))shf.push(w);});const jc=(txt.toLowerCase().match(/\bя\s+(не|это|просто|хотела|пыталась|говорила|сказала|думаю)/g)||[]).length;document.getElementById('metrics').innerHTML=`<div class="met ${sf.length>3?'warn':sf.length>0?'':'good'}"><div class="mv">${sf.length}</div><div class="ml">стоп-слов</div></div><div class="met ${jc>2?'warn':jc>0?'':'good'}"><div class="mv">${jc}</div><div class="ml">оправданий</div></div><div class="met ${shf.length>1?'good':shf.length>0?'':'warn'}"><div class="mv">${shf.length}</div><div class="ml">фраз из шпаргалки</div></div><div class="met"><div class="mv">${avg}</div><div class="ml">слов в реплике</div></div>`;let fl='';if(sf.length)fl+=`<div style="margin-bottom:6px"><span style="font-size:12px;color:var(--text3);margin-right:4px">стоп-слова:</span>${sf.map(w=>`<span class="flag fr">${w}</span>`).join('')}</div>`;if(shf.length)fl+=`<div><span style="font-size:12px;color:var(--text3);margin-right:4px">из шпаргалки:</span>${shf.map(w=>`<span class="flag fg">${w}</span>`).join('')}</div>`;document.getElementById('flags').innerHTML=fl;document.getElementById('aiout').textContent='Анализирую...';try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:`Ты коуч. Анализируй речь Саши — тимлида в разговоре с токсичной коллегой. Три коротких абзаца без заголовков: 1) тон и уверенность 2) стоп-слова и оправдания с переформулировками 3) что убрать. Стоп-слова: ${sf.join(', ')||'нет'}. Текст: "${txt}". По-русски.`}]})});const d=await r.json();document.getElementById('aiout').textContent=d.content.map(c=>c.text||'').join('');}catch{document.getElementById('aiout').textContent='Не удалось получить анализ.';}document.getElementById('ranalyze').disabled=false;}
+
+/* NAV */
+function show(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');}
+</script>
+</body>
+</html>
